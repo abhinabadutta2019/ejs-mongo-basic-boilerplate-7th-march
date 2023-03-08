@@ -1,0 +1,25 @@
+<body>
+  <div class="details-content">
+    <h2><%= blog.title %></h2>
+    <div class="content">
+      <p><%= blog.body %></p>
+    </div>
+
+    <button onclick="onDelete()">delete</button>
+
+    <script>
+      function onDelete() {
+        let id = window.location.pathname.split("/")[2];
+        console.log(id);
+        fetch(`/blogs/${id}`, { method: "DELETE" }).then((response) => {
+          // console.log(id);
+          //front end redirect
+          window.location.href = `${window.location.origin}/blogs`;
+
+          return;
+        });
+        // console.log(id);
+      }
+    </script>
+  </div>
+</body>

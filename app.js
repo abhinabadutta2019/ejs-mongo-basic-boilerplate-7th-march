@@ -28,8 +28,12 @@ app.use(morgan("tiny")); //logging
 app.use(express.urlencoded({ extended: true })); // parse urlencoded request bodies
 app.use("/static", express.static("static"));
 
-// blog routes
-app.use("/", blogRoutes);
+//////
+// routes
+//rendering create page with form
+
+//route file routes
+app.use("/blogs", blogRoutes);
 
 //server listener
 const PORT = 3007;
