@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const blogRoutes = require("./routes/blogRoutes");
+const bodyParser = require("body-parser");
 
 // express app
 const app = express();
@@ -27,6 +28,12 @@ app.set("view engine", "ejs");
 app.use(morgan("tiny")); //logging
 app.use(express.urlencoded({ extended: true })); // parse urlencoded request bodies
 app.use("/static", express.static("static"));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
 
 //////
 // routes

@@ -6,9 +6,13 @@
     </div>
 
     <button onclick="onDelete()">delete</button>
-
+    <!--  -->
+    <button onclick="onUpdate()">Likes</button>
+    <!--  -->
+    <p><%= blog.likes %></p>
     <script>
       function onDelete() {
+        //getting the id through window object
         let id = window.location.pathname.split("/")[2];
         console.log(id);
         fetch(`/blogs/${id}`, { method: "DELETE" }).then((response) => {
@@ -19,6 +23,38 @@
           return;
         });
         // console.log(id);
+      }
+      //
+      function onUpdate() {
+        //getting the id through window object
+        let id = window.location.href.split("/")[4];
+        console.log(id);
+
+        // // for path params
+        // fetch(`/blogs/${id}`, { method: "PATCH" }).then((response) => {
+        //   // console.log(id);
+        //   // window.location.reload();
+        //   return;
+        // });
+
+        // for query params
+        fetch(`/blogs/blogLikeQueryParams?id=${id}`, { method: "PATCH" }).then(
+          (response) => {
+            // console.log(id);
+            window.location.reload();
+            return;
+          }
+        );
+
+        // // for body
+        // fetch(`/blogs/blogLikeBody`, {
+        //   method: "PUT",
+        //   body: { id: id },
+        // }).then((response) => {
+        //   // console.log(id);
+        //   // window.location.reload();
+        //   return;
+        // });
       }
     </script>
   </div>
