@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <p><%- include('partials/navbar') %></p>
+
     <title>Document</title>
   </head>
   <body>
@@ -12,11 +14,27 @@
       <% blogs.forEach(blog => { %>
 
       <li>
-        <p><%= blog.title %></p>
-        <p><%= blog.body %></p>
+        <p>Title: <%= blog.title %></p>
+        <p>Body: <%= blog.body %></p>
+        <p>Likes: <%= blog.likes %></p>
+        <!-- button e blog id pathano holo -->
+        <button id="<%= blog.id %>" onclick="onDetails()">Detail</button>
       </li>
-
       <% }) %>
     </ul>
+
+    <script>
+      function onDetails() {
+        //get id- from button click
+        let id = event.srcElement.id;
+
+        fetch(`/blogs/single`, { method: "POST" }).then((response) => {
+          // console.log(id);
+          //front end redirect
+          window.location.href = `${window.location.origin}/blogs/${id}`;
+          return;
+        });
+      }
+    </script>
   </body>
 </html>

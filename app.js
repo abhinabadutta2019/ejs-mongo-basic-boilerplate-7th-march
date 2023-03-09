@@ -13,7 +13,7 @@ const CONFIG = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-// Establish Connection
+// // Establish Connection
 mongoose.connect(DATABASE_URL, CONFIG);
 
 //
@@ -25,7 +25,7 @@ mongoose.connection
 app.set("view engine", "ejs");
 
 // Middleware
-app.use(morgan("tiny")); //logging
+// app.use(morgan("tiny")); //logging
 app.use(express.urlencoded({ extended: true })); // parse urlencoded request bodies
 app.use("/static", express.static("static"));
 app.use(

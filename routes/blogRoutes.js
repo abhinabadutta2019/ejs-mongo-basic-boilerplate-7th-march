@@ -1,4 +1,5 @@
 const express = require("express");
+const { findByIdAndUpdate } = require("../model/blog");
 const Blog = require("../model/blog");
 const router = express.Router();
 
@@ -11,8 +12,10 @@ const router = express.Router();
 // get route
 // /blogs + /
 router.get("/", async (req, res) => {
-  //get blogs
-  const blogs = await Blog.find({});
+  // //get blogs
+  // const blogs = await Blog.find({});
+  //sort by likes
+  const blogs = await Blog.find().sort({ likes: -1 });
   //render index.ejs
   res.render("index.ejs", { blogs });
 });
@@ -27,6 +30,7 @@ router.get("/create", (req, res) => {
 // /blogs + /create
 router.post("/create", async (req, res) => {
   try {
+    console.log(req.body);
     const blog = new Blog(req.body);
     await blog.save(req.body);
     //redirect to main page
@@ -54,36 +58,66 @@ router.delete("/:id", async (req, res) => {
   res.send();
 });
 
+// form single page
+
+router.post("/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // const blog = await Blog.findById(
+    //   { _id: id }
+    //   //   { $set: { title: "Naomi" } }
+    // );
+    const uptitle = req.query.title;
+    const upbody = req.query.body;
+
+    await Blog.findOneAndUpdate(
+      { _id: id },
+      { $set: { title: uptitle, body: upbody } }
+    );
+    //getting id- with split method from this
+    //http://localhost:3007/blogs/update/640a1eab6a523c2597bdfb97?title=a&body=a
+    console.log(req.url.split("/")[2].split("?")[0]);
+    // console.log(uptitle, upbody);
+    res.send(id);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+//open single page
+router.post("/single", async (req, res) => {
+  try {
+    res.send();
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+//dislike
+router.put("/blogDislike", async (req, res) => {
+  try {
+    const id = req.query.id;
+    //dislike
+    await Blog.findOneAndUpdate(
+      { _id: id },
+      { $inc: { likes: -1 } },
+      { new: true }
+    );
+    res.send();
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 //quary params (kutti)
 router.patch("/blogLikeQueryParams", async (req, res) => {
   try {
     const id = req.query.id;
     const blog = await Blog.findOneAndUpdate(
       { _id: id },
-      {
-        $inc: { likes: 1 },
-      }
+      { $inc: { likes: 1 } }
     );
     res.send("HI");
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-//body params (kutti)
-router.put("/blogLikeBody", async (req, res) => {
-  try {
-    console.log(req.body);
-    const id = req.body.id;
-    const blog = await Blog.findOneAndUpdate(
-      { _id: id },
-      {
-        $inc: { likes: 1 },
-      }
-    );
-
-    console.log(blog, id);
-    res.send();
   } catch (e) {
     console.log(e);
   }
@@ -118,6 +152,24 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+//body params (kutti)
+router.put("/blogLikeBody", async (req, res) => {
+  try {
+    console.log(req.body);
+    const id = req.body.id;
+    const blog = await Blog.findOneAndUpdate(
+      { _id: id },
+      {
+        $inc: { likes: 1 },
+      }
+    );
+
+    console.log(blog, id);
+    res.send();
+  } catch (e) {
+    console.log(e);
+  }
+});
 // //seed route
 // router.get("/seed", async (req, res) => {
 //   //delete all existing blogs

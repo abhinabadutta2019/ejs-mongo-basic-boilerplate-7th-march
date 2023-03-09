@@ -1,16 +1,57 @@
+<head>
+  <%- include('partials/navbar') %>
+</head>
+<!--  -->
 <body>
   <div class="details-content">
     <h2><%= blog.title %></h2>
     <div class="content">
       <p><%= blog.body %></p>
     </div>
+    <!-- form -->
 
+    <h3>Update Form</h3>
+
+    <div>
+      <form action="#">
+        <label for="title">Blog title:</label>
+        <input type="text" id="title" name="title" required />
+        <label for="body">Blog body:</label>
+        <textarea id="body" name="body" required></textarea>
+      </form>
+      <button type="submit" onclick="onUpdate()">Submit</button>
+    </div>
+
+    <!-- buttons -->
     <button onclick="onDelete()">delete</button>
-    <!--  -->
-    <button onclick="onUpdate()">Likes</button>
+    <!-- like  -->
+    <button onclick="onLikes()">Likes</button>
+    <!--  Dislike-->
+    <button onclick="onDislikes()">Dislikes</button>
     <!--  -->
     <p><%= blog.likes %></p>
+    <!--  -->
     <script>
+      //update already created blog- from detailed page of that blog
+      function onUpdate() {
+        console.log("Hi");
+        const formTitle = document.getElementById("title").value;
+        const formBody = document.getElementById("body").value;
+        //
+        // console.log(formTitle, formBody);
+        //
+        let id = window.location.pathname.split("/")[2];
+        fetch(`/blogs/update/${id}?title=${formTitle}&body=${formBody}`, {
+          method: "POST",
+        }).then((response) => {
+          //reloading page
+          window.location.reload();
+          return;
+        });
+        console.log(id);
+        return;
+      }
+      //
       function onDelete() {
         //getting the id through window object
         let id = window.location.pathname.split("/")[2];
@@ -24,18 +65,25 @@
         });
         // console.log(id);
       }
+
+      function onDislikes() {
+        //
+        let id = window.location.href.split("/")[4];
+        console.log(id);
+        //using query params method
+        fetch(`/blogs/blogDislike?id=${id}`, { method: "PUT" }).then(
+          (response) => {
+            window.location.reload();
+            return;
+          }
+        );
+      }
+
       //
-      function onUpdate() {
+      function onLikes() {
         //getting the id through window object
         let id = window.location.href.split("/")[4];
         console.log(id);
-
-        // // for path params
-        // fetch(`/blogs/${id}`, { method: "PATCH" }).then((response) => {
-        //   // console.log(id);
-        //   // window.location.reload();
-        //   return;
-        // });
 
         // for query params
         fetch(`/blogs/blogLikeQueryParams?id=${id}`, { method: "PATCH" }).then(
@@ -45,6 +93,12 @@
             return;
           }
         );
+        // // for path params
+        // fetch(`/blogs/${id}`, { method: "PATCH" }).then((response) => {
+        //   // console.log(id);
+        //   // window.location.reload();
+        //   return;
+        // });
 
         // // for body
         // fetch(`/blogs/blogLikeBody`, {
